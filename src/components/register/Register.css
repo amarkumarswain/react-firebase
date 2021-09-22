@@ -1,0 +1,40 @@
+.register__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 150px;
+}
+
+.register__form {
+    width: 380px;
+    height: 470px;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.form-label {
+    color: #303030 !important;
+    font-weight: 600;
+}
+
+.form-control {
+    margin: 0 auto;
+    border: 1px solid #868686 !important;
+}
+
+.form-control.btn.btn-primary {
+    border: none !important;
+}
+
+.error__style {
+    color: red !important;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.text-danger {
+    font-size: 8px;
+    font-weight: bold;
+}

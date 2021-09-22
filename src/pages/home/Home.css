@@ -1,0 +1,11 @@
+.home__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 150px;
+}
+
+.home__container h1 {
+    font-weight: bold;
+    font-style: italic;
+}
