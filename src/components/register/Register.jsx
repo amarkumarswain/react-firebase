@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import "./Register.css"
 import 'react-toastify/dist/ReactToastify.css';
 import {Alert} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { db } from '../../firebase'
 import { useHistory } from 'react-router-dom';
 
 const Register = () => {
     const history = useHistory();
-    const { signup } = useAuth();
+    const { signup, currentUser } = useAuth();
 
     const [users, setUsers] = useState({
         firstname: "",
@@ -128,7 +128,9 @@ const Register = () => {
     const {firstnameError, lastnameError, usernameError, emailError, passwordError} = errors;
     return (
         <>
-            <div className="register__component">
+            {
+                !currentUser ? (
+                    <div className="register__component">
                 <div className="register__container">
                     {error && <Alert variant="danger">{error}</Alert>}
                     <form className="register__form" onSubmit={handleSubmit}>
@@ -138,7 +140,6 @@ const Register = () => {
                                 <input 
                                     type="text" 
                                     className="form-control"
-                                    autoComplete="off" 
                                     id="firstname" 
                                     name="firstname" 
                                     value={firstname.trim()}
@@ -151,7 +152,6 @@ const Register = () => {
                                 <input 
                                     type="text" 
                                     className="form-control" 
-                                    autoComplete="off"
                                     id="lastname" 
                                     name="lastname" 
                                     value={lastname.trim()}
@@ -165,7 +165,6 @@ const Register = () => {
                             <input 
                                 type="text" 
                                 className="form-control" 
-                                autoComplete="off"
                                 id="username" 
                                 name="username"
                                 value={username.trim()}
@@ -178,7 +177,6 @@ const Register = () => {
                             <input 
                                 type="text" 
                                 className="form-control" 
-                                autoComplete="off"
                                 id="email" 
                                 name="email"
                                 value={email.trim()}
@@ -191,7 +189,6 @@ const Register = () => {
                             <input 
                                 type="password" 
                                 className="form-control"
-                                autoComplete="off" 
                                 id="password" 
                                 name="password"
                                 value={password.trim()}
@@ -214,6 +211,8 @@ const Register = () => {
                     </form>
                 </div>
             </div>
+                ) : (<Redirect to="/" />)
+            }
         </>
     )
 }
