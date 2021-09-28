@@ -89,54 +89,52 @@ const Login = () => {
            {
                !currentUser ? (
                 <div className="login__component">
-                <div className="login__container">
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    <form className="login__form" onSubmit={handleSubmit}>
-                        <div className="mt-3">
-                            <label htmlFor="email" className="form-label">Email</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                autoComplete="off"
-                                id="email" 
-                                name="email"
-                                value={email.trim()}
-                                onChange={inputChangeHandler}
-                            />
-                            {
-                                emailError ? <p className="text-danger">{emailError}</p> : ""
-                            }
-                        </div>
-                        <div className="mt-3">
-                            <label htmlFor="password" className="form-label">Password</label>
-                            <input 
-                                type="password" 
-                                className="form-control"
-                                autoComplete="off" 
-                                id="password" 
-                                name="password"
-                                value={password.trim()}
-                                onChange={inputChangeHandler}
-                            />
-                            {
-                                passwordError ? <p className="text-danger">{passwordError}</p> : ""
-                            }
-                        </div>
-                        <div className="mt-3">
-                            <button
-                                type="submit" 
-                                className="form-control btn btn-primary"
-                                disabled={loading}
-                            >
-                                Login
-                            </button>
-                        </div>
-                        <div className="mt-2">
-                            <p>Have an account yet? <Link to="/signup">sign up</Link></p>
-                        </div>
-                    </form>
+                    <div className="login__container">
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        <form className="login__form" onSubmit={handleSubmit}>
+                            <div className="mt-3">
+                                <label htmlFor="email" className="form-label">Email</label>
+                                <input 
+                                    type="text" 
+                                    className="form-control"
+                                    id="email" 
+                                    name="email"
+                                    value={email.trim()}
+                                    onChange={inputChangeHandler}
+                                />
+                                {
+                                    emailError ? <p className="text-danger">{emailError}</p> : ""
+                                }
+                            </div>
+                            <div className="mt-3">
+                                <label htmlFor="password" className="form-label">Password</label>
+                                <input 
+                                    type="password" 
+                                    className="form-control"
+                                    id="password" 
+                                    name="password"
+                                    value={password.trim()}
+                                    onChange={inputChangeHandler}
+                                />
+                                {
+                                    passwordError ? <p className="text-danger">{passwordError}</p> : ""
+                                }
+                            </div>
+                            <div className="mt-3">
+                                <button
+                                    type="submit" 
+                                    className="form-control btn btn-primary"
+                                    disabled={loading}
+                                >
+                                    Login
+                                </button>
+                            </div>
+                            <div className="mt-2">
+                                <p>Have an account yet? <Link to="/signup">sign up</Link></p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
                ) : (<Redirect to="/" />)
            } 
         </>

@@ -1,0 +1,12 @@
+.about__container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about__container h1{
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 150px;
+    text-transform: capitalize;
+}
