@@ -9,7 +9,6 @@ export function useAuth(){
 
 const AuthContext = ({children}) => {
     const [currentUser, setCurrentUser] = useState();
-    console.log(currentUser);
     const [loading, setLoading] = useState(true);
 
     function signup(email, password){

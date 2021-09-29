@@ -4,85 +4,45 @@ import { Link, useHistory, Redirect } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 
-const defaultValues = {
-    emailError: "",
-    passwordError: ""
-}
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+let schema = yup.object().shape({
+    email: yup.string().email('Must be a valid email').max(255).required('email is required'),
+    password: yup
+    .string()
+    .required('please enter your password')
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+      "must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
+    )
+});
+
 
 const Login = () => {
-    const {currentUser} = useAuth();
     const history = useHistory();
-    const {login} = useAuth();
-    const [users, setUsers] = useState({
-        email: "",
-        password: ""
-    });
+    const {currentUser, login} = useAuth();
+
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [errors, serErrors] = useState(defaultValues);
 
-    const {email, password} = users;
+    const { register, handleSubmit, formState: { errors, isDirty, isValid }, reset } = useForm({
+        resolver: yupResolver(schema),
+        mode: "onChange"
+    });
 
-    let name;
-    let value;
-    const inputChangeHandler = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        setUsers({...users, [name]: value});
-    }
-
-    //check validation
-    const validate = () => {
-        let emailError = "";
-        let passwordError = "";
-
-        const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-        if(!email){
-            emailError = "email is required";
-        }else if(reg.test(email) === false){
-            emailError = "email is invalid";
-        }
-
-        //password validation
-        if(!password){
-            passwordError = "password is required"
-        }else if(password.length < 6){
-            passwordError = "password length must be atleast 6 characters";
-        }else if(password.length > 15){
-            passwordError = "password length must not exceed 15 characters";
-        }
-
-        if(emailError || passwordError){
-            serErrors({
-                emailError,
-                passwordError
-            });
-            return false;
-        }
-        return true;
-    }
-
-    async function handleSubmit(e){
+    const onSubmit = async (data, e) => {
         e.preventDefault();
-        validate();
         try{
-            const result = await login(email, password);
+            const result = await login(data.email, data.password);
             if(result){
-                setError("");
-                setLoading(true);
                 history.push("/");
-                setUsers({
-                    email: "",
-                    password: ""
-                });
+                reset();
             }
         }catch{
-            setError("Failed to email");
+            setError("Invalid email and password");
         }
-        setLoading(false);
     }
-
-    const {emailError, passwordError} = errors;
 
     return (
         <>
@@ -91,7 +51,7 @@ const Login = () => {
                 <div className="login__component">
                     <div className="login__container">
                         {error && <Alert variant="danger">{error}</Alert>}
-                        <form className="login__form" onSubmit={handleSubmit}>
+                        <form className="login__form" onSubmit={handleSubmit(onSubmit)}>
                             <div className="mt-3">
                                 <label htmlFor="email" className="form-label">Email</label>
                                 <input 
@@ -99,12 +59,9 @@ const Login = () => {
                                     className="form-control"
                                     id="email" 
                                     name="email"
-                                    value={email.trim()}
-                                    onChange={inputChangeHandler}
+                                    {...register('email')}
                                 />
-                                {
-                                    emailError ? <p className="text-danger">{emailError}</p> : ""
-                                }
+                                {errors.email?.message && <p className="error__style">{errors.email?.message}</p>}
                             </div>
                             <div className="mt-3">
                                 <label htmlFor="password" className="form-label">Password</label>
@@ -113,24 +70,21 @@ const Login = () => {
                                     className="form-control"
                                     id="password" 
                                     name="password"
-                                    value={password.trim()}
-                                    onChange={inputChangeHandler}
+                                    {...register('password')}
                                 />
-                                {
-                                    passwordError ? <p className="text-danger">{passwordError}</p> : ""
-                                }
+                                {errors.password?.message && <p className="error__style">{errors.password?.message}</p>}
                             </div>
                             <div className="mt-3">
                                 <button
                                     type="submit" 
                                     className="form-control btn btn-primary"
-                                    disabled={loading}
+                                    disabled={!isDirty || !isValid}
                                 >
                                     Login
                                 </button>
                             </div>
                             <div className="mt-2">
-                                <p>Have an account yet? <Link to="/signup">sign up</Link></p>
+                                <p>Don't have an account ? <Link to="/signup">sign up</Link></p>
                             </div>
                         </form>
                     </div>

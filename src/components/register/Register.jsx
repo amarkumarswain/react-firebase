@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import "./Register.css"
 import 'react-toastify/dist/ReactToastify.css';
 import {Alert} from 'react-bootstrap'
@@ -29,29 +29,29 @@ const Register = () => {
     const history = useHistory();
     const {signup, currentUser} = useAuth();
     const [error, setError] = useState("");
-
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors, isDirty, isValid }, reset } = useForm({
         resolver: yupResolver(schema),
+        mode: "onChange",
+        reValidateMode: "onChange",
     });
 
     const onSubmit = async (data) => {
         try{
-            const response = await signup(data.email, data.password).then(() => {
-                return db.collection('users').add({
-                    firstname: data.firstname,
-                    lastname: data.lastname,
-                    username: data.username
-                });
-            });
+            const res = await signup(data.email, data.password);
+            const user = res.user;
+            const response = await db.collection('users').add({
+                uid: user.uid,
+                firstname: data.firstname,
+                lastname: data.lastname,
+                username: data.username
+            })
             if(response){
                 history.push("/");
                 reset();
+                return response;
             }
         }catch{
             setError("Email is already exist");
-            setTimeout(() => {
-                setError("");
-            }, 1000);
         }
     }
 
@@ -123,6 +123,8 @@ const Register = () => {
                                 <button
                                     type="submit" 
                                     className="form-control btn btn-primary"
+                                    disabled={!isDirty || !isValid}
+                                    style={{ pointerEvents: "none" }}
                                 >
                                     Register
                                 </button>
