@@ -13,10 +13,7 @@ let schema = yup.object().shape({
     password: yup
     .string()
     .required('please enter your password')
-    .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-      "must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
-    )
+    .matches()
 });
 
 
@@ -25,22 +22,34 @@ const Login = () => {
     const {currentUser, login} = useAuth();
 
     const [error, setError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     const { register, handleSubmit, formState: { errors, isDirty, isValid }, reset } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange"
     });
 
+    
     const onSubmit = async (data, e) => {
         e.preventDefault();
         try{
-            const result = await login(data.email, data.password);
-            if(result){
-                history.push("/");
-                reset();
-            }
+            login(data.email, data.password).then((userCredential) => {
+                if(userCredential){
+                    history.push("/");
+                    reset();
+                }
+              })
+              .catch((error) => {
+                // const errorCode = error.code;
+                // console.log(errorCode)
+                const errorMessage = error.message;
+                // console.log(errorMessage);
+                if(errorMessage){
+                    setPasswordError("Wrong password.")
+                }
+              });
         }catch{
-            setError("Invalid email and password");
+            setError("Invalid email or password");
         }
     }
 
@@ -50,8 +59,8 @@ const Login = () => {
                !currentUser ? (
                 <div className="login__component">
                     <div className="login__container">
-                        {error && <Alert variant="danger">{error}</Alert>}
                         <form className="login__form" onSubmit={handleSubmit(onSubmit)}>
+                        {error && <Alert variant="danger">{error}</Alert>}
                             <div className="mt-3">
                                 <label htmlFor="email" className="form-label">Email</label>
                                 <input 
@@ -72,7 +81,7 @@ const Login = () => {
                                     name="password"
                                     {...register('password')}
                                 />
-                                {errors.password?.message && <p className="error__style">{errors.password?.message}</p>}
+                                {passwordError && <p className="error__style">{passwordError}</p>}
                             </div>
                             <div className="mt-3">
                                 <button

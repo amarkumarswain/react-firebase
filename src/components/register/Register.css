@@ -39,9 +39,10 @@
     font-weight: bold;
 }
 
-button:disabled {
+button:disabled{
     cursor: not-allowed;
     pointer-events: all !important;
+    background-color: gray !important;
 }
 
 button:enabled{

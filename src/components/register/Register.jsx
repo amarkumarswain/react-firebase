@@ -124,7 +124,6 @@ const Register = () => {
                                     type="submit" 
                                     className="form-control btn btn-primary"
                                     disabled={!isDirty || !isValid}
-                                    style={{ pointerEvents: "none" }}
                                 >
                                     Register
                                 </button>
