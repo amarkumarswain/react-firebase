@@ -9,7 +9,6 @@ import Register from './components/register/Register'
 import AuthContext from './context/AuthContext';
 import Login from './components/login/Login';
 import ProtectedRoute from './Routes/ProtectedRoute';
-import About from './pages/about/About';
 
 function App() {
   return (

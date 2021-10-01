@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Alert} from 'react-bootstrap'
 import { Link, Redirect } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { db } from '../../firebase'
+import { db } from '../../firebase/firebaseConfig';
 import { useHistory } from 'react-router-dom';
 
 import { useForm } from 'react-hook-form';
